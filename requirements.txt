@@ -1,5 +1,13 @@
+asgiref
 Django
-scikit-learn
+et-xmlfile
 joblib
+matplotlib
 numpy
 pandas
+pytz
+scikit-learn==1.5.1
+seaborn
+sqlparse
+threadpoolctl
+typing_extensions

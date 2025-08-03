@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-8m41baa5tx$@v#4=wei)bc6#*mqg=(6fozz6v@&k++@8oe2jmn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'carprice.local']
 
 
 # Application definition
