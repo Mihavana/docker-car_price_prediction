@@ -33,3 +33,8 @@ Ce projet propose une application web développée avec Django permettant de pr�
 ```bash
 git clone https://github.com/Mihavana/docker-car_price_prediction.git
 cd docker-car_price_prediction
+```
+### 2. Démarrer docker-compose.yml
+
+```bash
+docker compose up --build -d
