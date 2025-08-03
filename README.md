@@ -1,1 +1,35 @@
-# docker-car_price_prediction
+# Car Price Prediction Web App (Django + Random Forest)
+
+Ce projet propose une application web développée avec Django permettant de prédire le prix d'une voiture d'occasion à partir de ses caractéristiques. Le modèle de machine learning utilisé est un **Random Forest Regressor**, entraîné sur un dataset structuré. Une dockerisation complète est prévue pour faciliter le déploiement.
+
+---
+
+## Stack Technique
+
+| Composant       | Rôle                                 |
+|-----------------|--------------------------------------|
+| Python          | Langage principal                    |
+| Django          | Framework web                        |
+| scikit-learn    | Entraînement et utilisation du modèle ML |
+| Pandas / NumPy  | Prétraitement des données            |
+| Docker (à venir)| Conteneurisation et déploiement      |
+
+---
+
+## Fonctionnalités
+
+- Formulaire web pour saisir les caractéristiques d’un véhicule
+- Prédiction du prix en temps réel via le modèle Random Forest
+- Interface utilisateur simple et intuitive
+- Prétraitement des données intégré
+- Dockerisation en cours pour faciliter le déploiement
+
+---
+
+## Démarrage rapide (local)
+
+### 1. Cloner le dépôt
+
+```bash
+git clone https://github.com/Mihavana/docker-car_price_prediction.git
+cd docker-car_price_prediction
