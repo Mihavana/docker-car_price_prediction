@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+{% include 'prediction/navbar.html' %}
+
+<div class="container py-5">
+    <h1 class="text-center mb-4">Dashboard du Modèle de Prédiction</h1>
+
+    <!-- Informations sur le modèle -->
+    <div class="card shadow-sm rounded-4 mb-4">
+        <div class="card-body">
+            <h4 class="card-title">Détails du modèle</h4>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Type de modèle :</strong> {{ stats.Modele }}</li>
+                <li class="list-group-item"><strong>Variables utilisées :</strong> {{ stats.Variables_utilisees|join:" - " }}</li>
+                <li class="list-group-item"><strong>Nombres de lignes dans le dataset :</strong> {{ stats.Nombre_Ligne_Dataset }}</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Performances du modèle -->
+    <div class="card shadow-sm rounded-4 mb-4 border-success">
+        <div class="card-body">
+            <h4 class="card-title text-success">Performances du modèle</h4>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Meilleur score CV :</strong> -131 100.35</li>
+                <li class="list-group-item"><strong>MAE CV :</strong> 131 100.35</li>
+                <li class="list-group-item"><strong>MAE sur test set :</strong> 108 861.70</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Extrait des données d'entraînement -->
+    <div class="card shadow-sm rounded-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Extrait des données d'entraînement</h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Marque</th>
+                        <th>Carburant</th>
+                        <th>Type vendeur</th>
+                        <th>Transmission</th>
+                        <th>Kilométrage</th>
+                        <th>Âge</th>
+                        <th>Propriétaire</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in stats.Exemple_de_donnees %}
+                    <tr>
+                        <td>{{ row.Brand }}</td>
+                        <td>{{ row.Fuel }}</td>
+                        <td>{{ row.Seller_Type }}</td>
+                        <td>{{ row.Transmission }}</td>
+                        <td>{{ row.KM_Driven }}</td>
+                        <td>{{ row.Car_Age }}</td>
+                        <td>{{ row.Is_First_Owner }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="/" class="btn btn-outline-primary">← Retour à l'estimation</a>
+    </div>
+</div>
+
+</body>
+</html>
