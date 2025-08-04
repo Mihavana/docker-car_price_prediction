@@ -12,13 +12,11 @@
 
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg rounded-4 text-center">
-                <div class="card-body">
-                    <h2 class="card-title mb-4">Prix estimé </h2>
-                    <p class="display-4 fw-bold text-success">{{ prix|fr_intspace}} €</p>
-                    <a href="/predict-price/" class="btn btn-outline-primary mt-3">Faire une autre estimation</a>
-                </div>
+        <div class="card shadow-lg rounded-4 col-md-6 text-center">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Prix estimé </h2>
+                <p class="display-4 fw-bold text-success">{{ prix|fr_intspace}} €</p>
+                <a href="/predict-price/" class="btn btn-outline-primary mt-3">Faire une autre estimation</a>
             </div>
         </div>
     </div>

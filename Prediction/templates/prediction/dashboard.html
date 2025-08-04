@@ -13,64 +13,85 @@
 <div class="container py-5 main-content">
     <h1 class="text-center mb-4">Dashboard du Modèle de Prédiction</h1>
 
+    <div class="row justify-content-center mb-4">
+        <div class="card col-md-5 rounded-4 text-center">
+            <div class="card-body">
+                <h3 class="card-title mb-4">Coefficient de détermination </h3>
+                <span class="display-5 fw-bold text-success">90.3 %</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Informations sur le modèle -->
     <div class="card shadow-sm rounded-4 mb-4">
-        <div class="card-body">
-            <h4 class="card-title">Détails du modèle</h4>
-            <ul class="list-group">
-                <li class="list-group-item"><strong>Type de modèle :</strong> {{ stats.Modele }}</li>
-                <li class="list-group-item"><strong>Variables utilisées :</strong> {{ stats.Variables_utilisees|join:" - " }}</li>
-                <li class="list-group-item"><strong>Nombres de lignes dans le dataset :</strong> {{ stats.Nombre_Ligne_Dataset }}</li>
-            </ul>
+        <div class="row justify-content-center">
+            <div class="card rounded-4">
+                <div class="card-body">
+                    <h4 class="card-title">Détails du modèle</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Type de modèle :</strong> {{ stats.Modele }}</li>
+                        <li class="list-group-item"><strong>Variables utilisées :</strong> {{ stats.Variables_utilisees|join:" - " }}</li>
+                        <li class="list-group-item"><strong>Nombres de lignes dans le dataset :</strong> {{ stats.Nombre_Ligne_Dataset }}</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Performances du modèle -->
-    <div class="card shadow-sm rounded-4 mb-4 border-success">
-        <div class="card-body">
-            <h4 class="card-title text-success">Performances du modèle</h4>
-            <ul class="list-group">
-                <li class="list-group-item"><strong>Meilleur score CV :</strong> -131 100.35</li>
-                <li class="list-group-item"><strong>MAE CV :</strong> 131 100.35</li>
-                <li class="list-group-item"><strong>MAE sur test set :</strong> 108 861.70</li>
-            </ul>
+    <div class="card shadow-sm rounded-4 mb-4">
+        <div class="row justify-content-center">
+            <div class="card rounded-4">
+                <div class="card-body">
+                    <h4 class="card-title">Détails du modèle</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Meilleur score CV :</strong> -113266.39</li>
+                        <li class="list-group-item"><strong>MAE CV :</strong> 113266.39</li>
+                        <li class="list-group-item"><strong>MAE sur test set :</strong> 89788.66</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Extrait des données d'entraînement -->
-    <div class="card shadow-sm rounded-4">
-        <div class="card-body">
-            <h4 class="card-title mb-3">Extrait des données d'entraînement (10 premières lignes)</h4>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Brand</th>
-                        <th>Model</th>
-                        <th>Year</th>
-                        <th>Selling_Price (INR)</th>
-                        <th>KM_Driven</th>
-                        <th>Fuel</th>
-                        <th>Seller_Type</th>
-                        <th>Transmission</th>
-                        <th>Owner</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in stats.Exemple_de_donnees %}
-                    <tr>
-                        <td>{{ row.Brand }}</td>
-                        <td>{{ row.Model }}</td>
-                        <td>{{ row.Year }}</td>
-                        <td>{{ row.Selling_Price }}</td>
-                        <td>{{ row.KM_Driven }}</td>
-                        <td>{{ row.Fuel }}</td>
-                        <td>{{ row.Seller_Type }}</td>
-                        <td>{{ row.Transmission }}</td>
-                        <td>{{ row.Owner }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <div class="card shadow-sm rounded-4 mb-4">
+        <div class="row justify-content-center">
+            <div class="card rounded-4">
+                <div class="card-body">
+                    <h4 class="card-title mb-3">Extrait des données d'entraînement (10 premières lignes)</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Brand</th>
+                                <th>Model</th>
+                                <th>Year</th>
+                                <th>Selling_Price (INR)</th>
+                                <th>KM_Driven</th>
+                                <th>Fuel</th>
+                                <th>Seller_Type</th>
+                                <th>Transmission</th>
+                                <th>Owner</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in stats.Exemple_de_donnees %}
+                            <tr>
+                                <td>{{ row.Brand }}</td>
+                                <td>{{ row.Model }}</td>
+                                <td>{{ row.Year }}</td>
+                                <td>{{ row.Selling_Price }}</td>
+                                <td>{{ row.KM_Driven }}</td>
+                                <td>{{ row.Fuel }}</td>
+                                <td>{{ row.Seller_Type }}</td>
+                                <td>{{ row.Transmission }}</td>
+                                <td>{{ row.Owner }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 

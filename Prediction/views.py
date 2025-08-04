@@ -1,9 +1,11 @@
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from .models import PredictionHistory
 import joblib
 import numpy as np
 import pandas as pd
 import os
+import json
 
 model_path = os.path.join(os.path.dirname(__file__), '..', 'car_price_model.pkl')
 model = joblib.load(model_path)
@@ -14,6 +16,7 @@ BRANDS = ['Maruti', 'Hyundai', 'Datsun', 'Honda', 'Tata', 'Chevrolet',
           'BMW', 'Mahindra', 'Ford', 'Nissan', 'Renault', 'Fiat',
           'Volkswagen', 'Volvo', 'Mitsubishi', 'Land', 'Daewoo', 'MG',
           'Force', 'Isuzu', 'OpelCorsa', 'Ambassador', 'Kia']
+
 MODELS = ['Maruti 800 AC',
  'Maruti Wagon R LXI Minor',
  'Hyundai Verna 1.6 SX',
@@ -1016,6 +1019,23 @@ MODELS = ['Maruti 800 AC',
  'Tata Tiago 1.05 Revotorq XT Option'
  ]
 
+OWNERS = ['First Owner', 'Second Owner', 'Third Owner', 'Fourth & Above Owner', 'Test Drive Car']
+
+models_by_brand = {}
+# Initialisez une liste vide pour chaque marque
+for brand in BRANDS:
+    models_by_brand[brand] = []
+
+# Parcourez la liste complète des modèles pour les trier correctement
+for modelBrand in MODELS:
+    for brand in BRANDS:
+        # Vérifiez si le nom du modèle commence par le nom de la marque
+        # en étant insensible à la casse.
+        if modelBrand.lower().startswith(brand.lower()):
+            models_by_brand[brand].append(modelBrand)
+            # Une fois le modèle trouvé pour une marque, on passe au modèle suivant
+            break
+
 FUELS = ['Petrol', 'Diesel', 'CNG', 'LPG', 'Electric']
 SELLER_TYPES = ['Individual', 'Dealer', 'Trustmark Dealer']
 TRANSMISSIONS = ['Manual', 'Automatic']
@@ -1027,14 +1047,15 @@ def home(request):
 
 def predict_price(request):
     if request.method == 'POST':
-        brand = request.POST['Brand']
-        modelBrand = request.POST['Model']
-        fuel = request.POST['Fuel']
-        seller_Type = request.POST['Seller_Type']
-        transmission = request.POST['Transmission']
-        KM_Driven = int(request.POST['KM_Driven'])
-        year = int(request.POST['Year'])
-        is_first_owner = request.POST.get('Is_First_Owner') == 'on'  # checkbox renvoie 'on'
+        brand = request.POST.get('Brand')
+        modelBrand = request.POST.get('Model', '')
+        fuel = request.POST.get('Fuel') 
+        seller_Type = request.POST.get('Seller_Type')
+        transmission = request.POST.get('Transmission')
+        owner = request.POST.get('Owner')
+        KM_Driven = int(request.POST.get('KM_Driven'))
+        year = int(request.POST.get('Year'))
+        
 
         # Créer un DataFrame avec les bons noms de colonnes
         input_data = pd.DataFrame([{
@@ -1045,7 +1066,7 @@ def predict_price(request):
             'Transmission': transmission,
             'KM_Driven': KM_Driven,
             'Year': year,
-            'Is_First_Owner': is_first_owner
+            'Owner': owner
         }])
 
         # Taux de conversion INR → EUR
@@ -1062,9 +1083,9 @@ def predict_price(request):
             fuel=fuel,
             seller_type=seller_Type,
             transmission=transmission,
+            owner=owner,
             km_driven=KM_Driven,
             year=year,
-            is_first_owner=is_first_owner,
             predicted_price=prix
         )
 
@@ -1072,13 +1093,18 @@ def predict_price(request):
 
     # GET : afficher le formulaire avec les listes
     history = PredictionHistory.objects.order_by('-timestamp')[:10]
+    models_by_brand_json = json.dumps(models_by_brand)
+
     return render(request, 'prediction/form.html', {
         'brands': sorted(BRANDS),
         'models': sorted(MODELS),
+        'models_by_brand_json': models_by_brand_json,
         'fuels': sorted(FUELS),
         'seller_types': sorted(SELLER_TYPES),
         'transmissions': sorted(TRANSMISSIONS),
-        'history': history
+        'owners': OWNERS,
+        'history': history,
+        
     })
 
 def clear_history(request):
@@ -1090,7 +1116,7 @@ def dashboard(request):
     # Infos synthétiques du modèle simple
     stats = {
         "Modele": "Random Forest",
-        "Variables_utilisees": ["Brand", "Fuel", "Seller_Type", "Transmission", "KM_Driven", "Car_Age", "Is_First_Owner"],
+        "Variables_utilisees": ["Brand", "Model", "Year", "KM_Driver", "Fuel", "Seller_Type", "Transmission", "Owner"],
         "Nombre_Ligne_Dataset": 4340,
         "Exemple_de_donnees": [
             {"Brand": "Maruti", "Model": "Maruti 800 AC", "Year": 2007, "Selling_Price": 60000, "KM_Driven": 70000, "Fuel": "Petrol", "Seller_Type": "Individual", "Transmission": "Manual", "Owner": "First Owner"},

@@ -1,4 +1,3 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="fr">
@@ -16,7 +15,6 @@
     <form method="POST">
         {% csrf_token %}
 
-        <!-- Marque -->
         <div class="mb-3">
             <label for="brand" class="form-label">Marque</label>
             <select class="form-select" name="Brand" id="brand" required>
@@ -27,25 +25,13 @@
             </select>
         </div>
 
-        <!-- Model -->
         <div class="mb-3">
             <label for="modelBrand" class="form-label">Modèle</label>
-            <input 
-                class="form-control" 
-                list="model-options" 
-                name="Model" 
-                id="modelBrand" 
-                placeholder="Rechercher ou saisir un modèle" 
-                required
-            >
-            <datalist id="model-options">
-                {% for modele in models %}
-                    <option value="{{ modele }}"></option>
-                {% endfor %}
-            </datalist>
+            <select class="form-select" name="Model" id="modelBrand" disabled>
+                <option value="" selected>Choisissez d'abord une marque</option>
+            </select>
         </div>
 
-        <!-- Carburant -->
         <div class="mb-3">
             <label for="fuel" class="form-label">Carburant</label>
             <select class="form-select" name="Fuel" id="fuel" required>
@@ -56,9 +42,8 @@
             </select>
         </div>
 
-        <!-- Type de vendeur -->
         <div class="mb-3">
-            <label for="Seller_Type" class="form-label">Type de vendeur</label>
+            <label for="seller_type" class="form-label">Type de vendeur</label>
             <select class="form-select" name="Seller_Type" id="seller_type" required>
                 <option value="" disabled selected>Choisissez un type de vendeur</option>
                 {% for seller in seller_types %}
@@ -67,9 +52,8 @@
             </select>
         </div>
 
-        <!-- Transmission -->
         <div class="mb-3">
-            <label for="Transmission" class="form-label">Transmission</label>
+            <label for="transmission" class="form-label">Transmission</label>
             <select class="form-select" name="Transmission" id="transmission" required>
                 <option value="" disabled selected>Choisissez le type de transmission</option>
                 {% for trans in transmissions %}
@@ -78,34 +62,32 @@
             </select>
         </div>
 
-        <!-- Kilométrage -->
+        <div class="mb-3">
+            <label for="owner" class="form-label">Propriétaire</label>
+            <select class="form-select" name="Owner" id="owner" required>
+                <option value="" disabled selected>Choisissez le type de propriétaire</option>
+                {% for prop in owners %}
+                    <option value="{{ prop }}">{{ prop }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
         <div class="mb-3">
             <label for="KM_Driven" class="form-label">Kilométrage (KM)</label>
             <input type="number" class="form-control" name="KM_Driven" id="KM_Driven" required min="0">
         </div>
 
-        <!-- Année du véhicule -->
         <div class="mb-3">
-            <label for="Car_Age" class="form-label">Année</label>
+            <label for="year" class="form-label">Année</label>
             <input type="number" class="form-control" name="Year" id="year" required min="0">
         </div>
 
-        <!-- Première main -->
-        <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" name="Is_First_Owner" id="is_first_owner">
-            <label class="form-check-label" for="is_first_owner">
-                Première main
-            </label>
-        </div>
-    
 
-        <!-- Bouton -->
         <div class="d-grid">
             <button type="submit" class="btn btn-primary">Estimer le prix</button>
         </div>
     </form>
 
-    <!-- Historique des prédictions (collapsible) -->
     {% if history %}
     <hr class="my-5">
     <div class="text-center mb-3">
@@ -113,7 +95,6 @@
             Voir l'historique des prédictions
         </button>
     </div>
-
 
     <div class="collapse" id="historiqueCollapse">
         <div class="card card-body shadow-sm rounded-4">
@@ -130,7 +111,7 @@
                             <th>Transmission</th>
                             <th>KM</th>
                             <th>Année</th>
-                            <th>1ère main</th>
+                            <th>Propriétaire</th>
                             <th>Prix prédit (€)</th>
                         </tr>
                     </thead>
@@ -145,7 +126,7 @@
                             <td>{{ record.transmission }}</td>
                             <td>{{ record.km_driven }}</td>
                             <td>{{ record.year }}</td>
-                            <td>{{ record.is_first_owner|yesno:"Oui,Non" }}</td>
+                            <td>{{ record.owner}}</td>
                             <td>{{ record.predicted_price|floatformat:2 }}</td>
                         </tr>
                         {% endfor %}
@@ -168,18 +149,66 @@
 
         <div class="table-responsive">
             <table class="table table-bordered table-hover align-middle">
+                </table>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var historiqueCollapse = document.getElementById('historiqueCollapse');
-    var boutonHistorique = document.querySelector('[data-bs-target="#historiqueCollapse"]');
 
-    historiqueCollapse.addEventListener('shown.bs.collapse', function () {
-      // Scroll vers la div historique avec un petit offset pour confort visuel
-      historiqueCollapse.scrollIntoView({ behavior: 'smooth', block: 'start' });
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    // --- 1. Logique de filtrage des modèles par marque ---
+    const brandSelect = document.getElementById('brand');
+    const modelSelect = document.getElementById('modelBrand');
+    const modelsByBrand = JSON.parse('{{ models_by_brand_json|escapejs }}');
+
+    brandSelect.addEventListener('change', function() {
+        const selectedBrand = this.value;
+        const models = modelsByBrand[selectedBrand]; // Ne pas utiliser || [] ici, c'est ce que nous gérons
+
+        // Vider le menu déroulant des modèles
+        modelSelect.innerHTML = '';
+        
+        if (models && models.length > 0) {
+            // Activer le menu déroulant et le remplir
+            modelSelect.disabled = false;
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Choisissez un modèle';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            modelSelect.appendChild(defaultOption);
+
+            models.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model;
+                option.textContent = model;
+                modelSelect.appendChild(option);
+            });
+        } else {
+            // S'il n'y a pas de modèles, désactiver le menu et afficher un message
+            modelSelect.disabled = true;
+            const noModelOption = document.createElement('option');
+            noModelOption.value = '';
+            noModelOption.textContent = 'Aucun modèle disponible pour cette marque';
+            noModelOption.disabled = true;
+            noModelOption.selected = true;
+            modelSelect.appendChild(noModelOption);
+        }
     });
-  });
+
+        // --- 2. Logique de défilement pour l'historique ---
+        var historiqueCollapse = document.getElementById('historiqueCollapse');
+        var boutonHistorique = document.querySelector('[data-bs-target="#historiqueCollapse"]');
+
+        if (historiqueCollapse && boutonHistorique) {
+            historiqueCollapse.addEventListener('shown.bs.collapse', function () {
+                historiqueCollapse.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
+    });
 </script>
+
 </body>
 </html>

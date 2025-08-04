@@ -7,7 +7,7 @@ class PredictionHistory(models.Model):
     fuel = models.CharField(max_length=50)
     seller_type = models.CharField(max_length=50)
     transmission = models.CharField(max_length=50)
+    owner = models.CharField(max_length=50)
     km_driven = models.IntegerField()
     year = models.IntegerField()
-    is_first_owner = models.BooleanField()
     predicted_price = models.FloatField()
