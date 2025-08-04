@@ -8,7 +8,7 @@ Ce projet propose une application web développée avec Django permettant de pr�
 
 Le dataset utilisé pour l'entrainement du modèle de machine learning a été pris sur le github de [YBI-Foundation](https://github.com/YBIFoundation/Dataset/tree/main).  
 La devise utilisée dans ce dataset pour le prix des voitures est la roupie indienne (INR ₹)  
-<font size="6">1€ ~ 100/₹</font>
+<font size="10"><h1 align="center">1€ ~ 100/₹</h1></font>
 
 ---
 
