@@ -1036,6 +1036,9 @@ for modelBrand in MODELS:
             # Une fois le modèle trouvé pour une marque, on passe au modèle suivant
             break
 
+for brand in models_by_brand:
+    models_by_brand[brand].sort()
+    
 FUELS = ['Petrol', 'Diesel', 'CNG', 'LPG', 'Electric']
 SELLER_TYPES = ['Individual', 'Dealer', 'Trustmark Dealer']
 TRANSMISSIONS = ['Manual', 'Automatic']

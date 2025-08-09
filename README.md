@@ -20,7 +20,7 @@ La devise utilisée dans ce dataset pour le prix des voitures est la roupie indi
 | Django          | Framework web                        |
 | scikit-learn    | Entraînement et utilisation du modèle ML |
 | Pandas / NumPy  | Prétraitement des données            |
-| Docker (à venir)| Conteneurisation et déploiement      |
+| Docker          | Conteneurisation et déploiement      |
 
 ---
 
